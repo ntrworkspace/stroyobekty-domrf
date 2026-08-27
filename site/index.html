@@ -1,0 +1,145 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#173f35" />
+    <meta
+      name="description"
+      content="Мобильный конструктор ссылок для выборки строительных объектов на НАШ.ДОМ.РФ"
+    />
+    <link rel="icon" href="./icon.svg" type="image/svg+xml" />
+    <link rel="manifest" href="./manifest.webmanifest" />
+    <link rel="stylesheet" href="./styles.css" />
+    <title>СтройОбъекты — быстрый запрос</title>
+  </head>
+  <body>
+    <header class="topbar">
+      <a class="brand" href="#top" aria-label="СтройОбъекты — на главную">
+        <img src="./icon.svg" alt="" />
+        <span>СтройОбъекты</span>
+      </a>
+      <span class="mode-pill"><i></i> НАШ.ДОМ.РФ</span>
+    </header>
+
+    <main id="top">
+      <section class="hero">
+        <div>
+          <p class="eyebrow">Быстрый запрос</p>
+          <h1>Соберите точную выборку объектов</h1>
+          <p class="lead">
+            Выберите территорию, период и типы объектов. Сервис сформирует ссылку на каталог и имя будущей таблицы.
+          </p>
+        </div>
+        <div class="hero-mark" aria-hidden="true"><span>TSV</span><strong>→</strong><span>Git</span></div>
+      </section>
+
+      <section class="workspace" aria-label="Параметры запроса">
+        <form class="filter-card" id="query-form">
+          <div class="section-heading">
+            <span>01</span>
+            <div><h2>Территория</h2><p>Вся Россия, регион или отдельный город</p></div>
+          </div>
+
+          <div class="preset-grid" role="group" aria-label="Быстрый выбор территории">
+            <button type="button" class="preset is-active" data-slug="" data-label="Вся Россия">Вся Россия</button>
+            <button type="button" class="preset" data-slug="москва" data-label="Москва">Москва</button>
+            <button type="button" class="preset" data-slug="московская-область" data-label="Московская область">Московская область</button>
+            <button type="button" class="preset" data-slug="нижегородская-область" data-label="Нижегородская область">Нижегородская область</button>
+          </div>
+
+          <label class="field">
+            <span>Другая территория <small>сегмент из адреса сайта</small></span>
+            <input id="geography-slug" name="geography_slug" placeholder="например, нижний-новгород" autocomplete="off" />
+          </label>
+          <label class="field">
+            <span>Название для таблицы <small>необязательно</small></span>
+            <input id="geography-label" name="geography_label" placeholder="Например, Нижний Новгород" autocomplete="off" />
+          </label>
+
+          <div class="section-heading section-gap">
+            <span>02</span>
+            <div><h2>Срок ввода</h2><p>Нижняя и верхняя границы периода</p></div>
+          </div>
+
+          <div class="period-grid">
+            <fieldset>
+              <legend>Начиная с</legend>
+              <div class="field-pair">
+                <label class="field compact"><span>Год</span><input type="number" id="from-year" min="2020" max="2040" value="2027" inputmode="numeric" /></label>
+                <label class="field compact"><span>Квартал</span><select id="from-quarter"><option value="1">I</option><option value="2">II</option><option value="3">III</option><option value="4" selected>IV</option></select></label>
+              </div>
+            </fieldset>
+            <fieldset>
+              <legend>Заканчивая</legend>
+              <div class="field-pair">
+                <label class="field compact"><span>Год</span><input type="number" id="to-year" min="2020" max="2040" value="2028" inputmode="numeric" /></label>
+                <label class="field compact"><span>Квартал</span><select id="to-quarter"><option value="1">I</option><option value="2">II</option><option value="3">III</option><option value="4" selected>IV</option></select></label>
+              </div>
+            </fieldset>
+          </div>
+
+          <div class="section-heading section-gap">
+            <span>03</span>
+            <div><h2>Объекты</h2><p>Можно выбрать оба типа одновременно</p></div>
+          </div>
+
+          <div class="choice-grid">
+            <label class="choice"><input type="checkbox" name="object_type" value="D006_1" checked /><span><b>Жилой дом</b><small>D006_1</small></span></label>
+            <label class="choice"><input type="checkbox" name="object_type" value="D090_1" checked /><span><b>Деловой центр</b><small>D090_1</small></span></label>
+          </div>
+
+          <label class="switch-row">
+            <span><b>Только с машиноместами</b><small>Добавит параметр parkingFlg=1</small></span>
+            <input type="checkbox" id="parking" checked />
+            <i aria-hidden="true"></i>
+          </label>
+
+          <p class="form-error" id="form-error" role="alert" hidden></p>
+        </form>
+
+        <aside class="result-card" aria-live="polite">
+          <p class="eyebrow">Готовый запрос</p>
+          <h2 id="summary-title">Вся Россия</h2>
+          <div class="summary-list">
+            <p><span>Период</span><strong id="summary-period">IV кв. 2027 — IV кв. 2028</strong></p>
+            <p><span>Типы</span><strong id="summary-types">Жилой дом · Деловой центр</strong></p>
+            <p><span>Машиноместа</span><strong id="summary-parking">Да</strong></p>
+          </div>
+
+          <label class="url-box">
+            <span>Ссылка на выдачу</span>
+            <textarea id="generated-url" rows="5" readonly></textarea>
+          </label>
+
+          <div class="primary-actions">
+            <a class="button primary" id="open-url" href="#" target="_blank" rel="noopener noreferrer">Открыть НАШ.ДОМ.РФ</a>
+            <button class="button secondary" type="button" id="copy-url">Копировать</button>
+          </div>
+
+          <div class="export-preview">
+            <span>Таблица будет сохранена как</span>
+            <code id="export-path"></code>
+          </div>
+          <button class="manifest-button" type="button" id="download-request">Скачать параметры запроса</button>
+        </aside>
+      </section>
+
+      <section class="how-it-works">
+        <p class="eyebrow">Рабочий процесс</p>
+        <h2>Три понятных шага</h2>
+        <div class="steps">
+          <article><span>1</span><h3>Сформировать</h3><p>Настройте фильтры и откройте готовую страницу каталога.</p></article>
+          <article><span>2</span><h3>Захватить</h3><p>На компьютере вручную сохраните открытую выдачу через локальное расширение.</p></article>
+          <article><span>3</span><h3>Получить TSV</h3><p>Локальный обработчик создаст датированную таблицу в папке экспорта.</p></article>
+        </div>
+        <p class="privacy-note">Этот лендинг формирует ссылку прямо в браузере и не отправляет введённые параметры на сторонний сервер.</p>
+      </section>
+    </main>
+
+    <footer><span>СтройОбъекты</span><small>Ручной сбор открытых данных · локальная обработка</small></footer>
+    <div class="toast" id="toast" role="status" aria-live="polite"></div>
+    <script src="./query-core.js" defer></script>
+    <script src="./app.js" defer></script>
+  </body>
+</html>

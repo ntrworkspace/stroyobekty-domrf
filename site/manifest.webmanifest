@@ -1,0 +1,19 @@
+{
+  "name": "СтройОбъекты — быстрый запрос",
+  "short_name": "СтройОбъекты",
+  "description": "Мобильный конструктор ссылок для каталога НАШ.ДОМ.РФ",
+  "lang": "ru",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#edf5ef",
+  "theme_color": "#173f35",
+  "icons": [
+    {
+      "src": "./icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
